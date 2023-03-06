@@ -1,13 +1,13 @@
 package com.skypro.library.dao;
 
 import com.skypro.library.entity.Book;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+@Repository
 public class BookDAOImpl implements BookDAO {
 private final JdbcTemplate jdbcTemplate;
 
@@ -19,12 +19,12 @@ private final JdbcTemplate jdbcTemplate;
     public void addBook( Book book ) {
     this.jdbcTemplate.update(
             "INSERT INTO books (name, author, year, isbn) VALUES (?, ?, ?, ?)",
-            book.getTitle(), book.getAuthor(), book.getYear(), book.getIsbn());
+            book.getName(), book.getAuthor(), book.getYear(), book.getIsbn());
     }
 
     @Override
     public void updateBook(Book book ) {
-        jdbcTemplate.update("UPDATE books SET name=?, author=?, year=? WHERE isbn=?", book.getTitle(),
+        jdbcTemplate.update("UPDATE books SET name=?, author=?, year=? WHERE isbn=?", book.getName(),
                 book.getAuthor(), book.getYear(), book.getIsbn());
     }
 

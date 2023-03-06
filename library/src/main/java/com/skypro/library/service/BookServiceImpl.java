@@ -1,6 +1,6 @@
 package com.skypro.library.service;
 
-import com.skypro.library.dao.BookDAOImpl;
+import com.skypro.library.dao.BookDAO;
 import com.skypro.library.entity.Book;
 import com.skypro.library.exception.ValidationException;
 import org.springframework.stereotype.Service;
@@ -8,16 +8,21 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 public class BookServiceImpl implements BookService{
-    private BookDAOImpl bookDAOImpl;
+    private BookDAO bookDAO;
+
+    public BookServiceImpl( BookDAO bookDAO ) {
+        this.bookDAO = bookDAO;
+    }
+
     @Override
     public List<Book> getAllBooks() {
-        return bookDAOImpl.getAllOfBooks();
+        return bookDAO.getAllOfBooks();
     }
 
     @Override
     public void createNewBook( Book book ) {
         validateBook(book);
-bookDAOImpl.addBook(book);
+bookDAO.addBook(book);
     }
 
     @Override
@@ -26,22 +31,22 @@ bookDAOImpl.addBook(book);
             throw  new NullPointerException("такой книги нет!");
         }
         // Получем книгу по ISBN
-        Book editableBook = this.bookDAOImpl.getBookByIsbn(book.getIsbn());
+        Book editableBook = this.bookDAO.getBookByIsbn(book.getIsbn());
         // Устанавливаем поля которые можно обновлять
         // ISBN - это идентификатор книги - поэтому меняться он не может
         editableBook.setAuthor(book.getAuthor());
-        editableBook.setTitle(book.getTitle());
+        editableBook.setName(book.getName());
         editableBook.setYear(book.getYear());
         //Запускаем метод валидации после редактирования
         validateBook(editableBook);
         //Обновляем книгу в БД
-        bookDAOImpl.updateBook(book);
+        bookDAO.updateBook(book);
         return book;
     }
 
     @Override
-    public void deleteBook( Book book ) {
-bookDAOImpl.deleteBookById(book.getIsbn());
+    public void deleteBook( String isbn ) {
+bookDAO.deleteBookById(isbn);
     }
     private void validateBook(Book book){
         String currIsbn = book.getIsbn();
