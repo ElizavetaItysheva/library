@@ -31,8 +31,8 @@ public class RestControllerNew {
         return book;
     }
 
-    @DeleteMapping("/api/book?isbn=<isbn>")
-    public void deleteBook(@RequestParam Book book) {
-        bookService.deleteBook(book);
+    @DeleteMapping("/api/book")
+    public void deleteBook(@RequestParam String isbn) {
+        bookService.deleteBook(isbn);
     }
 }
